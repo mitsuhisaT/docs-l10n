@@ -354,6 +354,7 @@ func @unsupported_op() -> tensor<i32> {
   return %0 : tensor<i32>
 }
 ```
+### `-tf-optimize`: Optimize TensorFlow module
 ### `-tf-region-control-flow-to-functional`: Transforms region-based control flow operations to their functional counterparts
 This pass transforms region-based control flow operations in the TensorFlow
 dialect to their functional counterparts, i.e., `tf.IfRegion` is transformed to
@@ -384,6 +385,16 @@ will be transformed into this functional operation
 ```
 -max-iterations : Maximum shape inference iterations
 ```
+### `-tf-tensor-array-ops-decomposition`: Decompose tensor array operations into local variable operations.
+A pass that converts tensor array operations to tensor operations and
+read/assign ops on local variables. A later resource lifting pass can further
+remove the local variables.
+
+This pass requires that the full shape of the tensor array can be inferred:
+1) the size needs to be a constant, 2) it specifies the full element shape,
+or that can be inferred from a later write, and 3) all elements have the same
+shape.
+### `-tf-tensor-device-copy`: Fold the tf.Identity op if the op has the same device as its operand
 ### `-tf-tpu-cluster-formation`: Forms clusters from operations assigned to the same TPU computation
 TPU computations from the frontend are composed of a `tf.TPUReplicateMetadata`
 op, a subgraph of ops (TensorFlow Dialect) each with a matching `_tpu_replicate`
